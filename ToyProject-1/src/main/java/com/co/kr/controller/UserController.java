@@ -241,7 +241,7 @@ public class UserController {
 
 	};
 
-	@RequestMapping(value = "board")
+	@RequestMapping("board")
 	public ModelAndView login(LoginVO loginDTO, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
@@ -377,10 +377,5 @@ public class UserController {
 		return mav;
 	}
 
-	@RequestMapping("chat")
-	public ModelAndView chat() {
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("chat/chat.html");
-		return mav;
-	}
+
 }
