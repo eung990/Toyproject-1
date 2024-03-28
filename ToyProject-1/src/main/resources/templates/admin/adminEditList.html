@@ -1,0 +1,211 @@
+
+<!DOCTYPE HTML>
+<!--
+	Alpha by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="assets/css/main.css" />
+<link rel="stylesheet" href="script" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/jquery-ui-1.12.1.css}">
+</head>
+<body class="is-preload">
+	<div id="page-wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1>
+				<a href="http://localhost:8082/main.do/">메인화면</a>
+			</h1>
+			<nav id="nav">
+				<ul>
+					<li><a href="test1">Home</a></li>
+					<th:block th:if="${session.mbLevel}==3">
+						<li><a th:href="@{mbList(page=1)}">사용자정보</a></li>
+					</th:block>
+					<li><a th:href="@{bdList}">자유게시판</a></li>
+					<li><a th:href="@{ImageList}">MBTI 게시판</a></li>
+
+				</ul>
+			</nav>
+		</header>
+
+		<!-- Main -->
+		<section id="main" class="container">
+			<header>
+				<h2>사용자 정보</h2>
+				<p class="title" style="color: #ff7f00">사용자 수정하기</p>
+			</header>
+			<section class="box">
+				<div class="userInfo" th:if=${session.id}>
+					<span  style="color: #0099a4" th:text="${session.id}"></span><span> 님 / </span> <span
+						th:text="${session.mbLevel}"  style="color: #0099a4"></span><span> 레벨</span>
+					<button type="button" class="button special small">
+						<a th:href="@{logout}" style="color: #fff">로그아웃</a>
+					</button>
+				</div>
+
+
+				<form role="form" action="update" method="post">
+					<div class="section form">
+						<table>
+							<colgroup>
+								<col style="width: 10%" />
+								<col style="width: 40%" />
+								<col style="width: 15%" />
+								<col style="width: 35%" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<th class="critical"><a href="#" class="tip"><span>아이디</span></a></th>
+									<td><input type="text" name="id" placeholder="id"
+										th:value=${item.mbId} /></td>
+									<th class="critical"><a href="#" class="tip"><span>패스워드</span></a></th>
+									<td><input type="text" name="pw" placeholder="password"
+										th:value=${item.mbPw} required /></td>
+									<td><input type="hidden" name="admin" value="admin"
+										required /></td>
+									<td><input type="hidden" name="seq"
+										th:value="${item.mbSeq}" required /></td>
+								</tr>
+							</tbody>
+						</table>
+						<button class= "button" type="submit" style="margin-right: 11px">멤버 수정</button>
+					</div>
+
+				</form>
+
+			</section>
+			<section class="box">
+				<div class="row">
+					<div class="col-12">
+
+						<!-- Text -->
+						<section class="box">
+							<div class="section list">
+								<table>
+									<colgroup>
+										<col style="width: 15%" />
+										<col style="width: 15%" />
+										<col style="width: 8%" />
+										<col style="width: 10%" />
+										<col style="width: 8%" />
+										<col style="width: 15%" />
+										<col style="width: 15%" />
+										<col style="width: 14%" />
+									</colgroup>
+									<thead>
+										<tr>
+											<th>아이디</th>
+											<th>패스워드</th>
+											<th>회원등급</th>
+											<th>아이피</th>
+											<th>사용여부</th>
+											<th>생성일자</th>
+											<th>업데이트일자</th>
+											<th>변경</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:if=${itemsNotEmpty} th:each="item : ${items}">
+											<!--                 <td th:text="${item.mbSeq}"></td> -->
+											<td th:text="${item.mbId}"></td>
+											<td th:text="${item.mbPw}"></td>
+											<td th:text="${item.mbLevel}"></td>
+											<td th:text="${item.mbIp}"></td>
+											<td th:text="${item.mbUse}"></td>
+											<td th:text="${item.mbCreateAt}"></td>
+											<td th:text="${item.mbUpdateAt}"></td>
+											<td
+												style="display: flex; align-items: center; justify-content: center">
+												<a th:href="@{/modify/{mbSeq}(mbSeq = ${item.mbSeq})}"><button class="button special small">수정</button></a>
+												<a th:href="@{/remove/{mbSeq}(mbSeq = ${item.mbSeq})}"><button class="button special small">삭제</button></a>
+											</td>
+										</tr>
+										<tr th:unless=${itemsNotEmpty}>
+											<td colspan="8" style="padding: 60px 0">데이터가 없습니다</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<div th:if=${itemsNotEmpty} class="pagination">
+									<ul>
+										<th:block th:switch="${startpage} <= ${endpage}">
+											<li th:case="${rowNUM} < 0" style="display: none;"><a
+												class="icon first" th:href="@{mbList(page=${1})}">&laquo;</a>
+											</li>
+											<li th:case="${rowNUM} > ${startpage}"
+												style="display: inline-block"><a class="icon first"
+												th:href="@{mbList(page=${startpage})}">&laquo;</a></li>
+											<li th:case="${startpage} < 10" style="display: none;">
+												<a class="icon first"
+												th:href="@{mbList(page=${startpage}-10)}">&laquo;</a>
+											</li>
+											<li th:case="${startpage} > 10"
+												style="display: inline-block;"><a class="icon first"
+												th:href="@{mbList(page=${1})}">&laquo;</a></li>
+										</th:block>
+
+										<th:block th:switch="${rowNUM} >= 1">
+											<li th:case="(${rowNUM}-1) == 0" style="display: none">
+												<a class="icon first" th:href="@{mbList(page=${1})}">&laquo;</a>
+											</li>
+											<li th:case="(${rowNUM}-1) > 0" style="display: inline-block">
+												<a class="icon first" th:href="@{mbList(page=${rowNUM}-1)}"></a>
+											</li>
+										</th:block>
+
+										<!-- for 문 -->
+										<li th:each="i : ${#numbers.sequence(startpage, endpage)}"
+											style="display: inline-block">
+											<div class="on" th:if="${i}==${rowNUM}" th:text="${i}"></div>
+											<div th:unless="${i}==${rowNUM}">
+												<a class="on" th:href="@{mbList(page=${i})}" th:text="${i}"></a>
+											</div>
+										</li>
+										<!-- for 문 -->
+
+										<th:block th:switch="${rowNUM} <= ${endpage}">
+											<li th:case="${rowNUM} < ${endpage}"
+												style="display: inline-block"><a class="icon last"
+												th:href="@{mbList(page=${rowNUM}+1)}"></a></li>
+											<li th:case="${rowNUM} == ${endpage}" style="display: none">
+												<a class="icon last" th:href="@{mbList(page=${endpage})}"></a>
+											</li>
+										</th:block>
+
+										<th:block th:switch="${rowNUM} < ${endpage}">
+											<li th:case="${rowNUM} < ${endpage}"
+												style="display: inline-block"><a class="icon last"
+												th:href="@{mbList(page=${startpage}+10)}"></a></li>
+										</th:block>
+
+									</ul>
+								</div>
+							</div>
+						</section>
+						<!-- Scripts -->
+						<script src="assets/js/jquery.min.js"></script>
+						<script src="assets/js/jquery.dropotron.min.js"></script>
+						<script src="assets/js/jquery.scrollex.min.js"></script>
+						<script src="assets/js/browser.min.js"></script>
+						<script src="assets/js/breakpoints.min.js"></script>
+						<script src="assets/js/util.js"></script>
+						<script src="assets/js/main.js"></script>
+						
+						<!-- 전체 이용 css script -->
+						<script th:src="@{/js/jquery-1.12.4.js}"></script>
+						<script th:src="@{/js/jquery-ui-1.12.1.js}"></script>
+						<script th:src="@{/js/moment-2.29.1.js}"></script>
+						<script th:src="@{/js/chartjs-2.8.0.js}"></script>
+						<script th:src="@{/js/popper.min.js}"></script>
+						<script th:src="@{/js/bootstrap.min.js}"></script>
+						<script th:src="@{/js/common.js}"></script>
+</body>
+</html>
