@@ -18,10 +18,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.co.kr.domain.BoardListDomain;
 import com.co.kr.domain.LoginDomain;
@@ -161,7 +163,7 @@ public class UserController {
 			System.out.println("items=====>" + items);
 			mav.addObject("items", items);
 
-			mav.setViewName("board/boardList.html");
+			mav.setViewName("redirect:/bdList");
 		} else {
 			// 로그인
 			// session저장
@@ -171,7 +173,7 @@ public class UserController {
 
 			List<BoardListDomain> items = uploadService.boardList();
 			mav.addObject("items", items);
-			mav.setViewName("board/boardList.html");
+			mav.setViewName("redirect:/bdList");
 
 		}
 
@@ -262,7 +264,7 @@ public class UserController {
 
 		if (dupleCheck == 0) {
 			String alertText = "없는 아이디이거나 패스워드가 잘못되었습니다. 기입해주세요";
-			String redirectPath = "/main/signin";
+			String redirectPath = "signin";
 			CommonUtils.redirect(alertText, redirectPath, response);
 			return mav;
 		}
@@ -285,7 +287,7 @@ public class UserController {
 	}
 
 	// 좌측 메뉴 클릭시 보드화면 이동 (로그인된 상태)
-	@RequestMapping(value = "bdList")
+	@RequestMapping("bdList")
 	public ModelAndView bdList() {
 		ModelAndView mav = new ModelAndView();
 		List<BoardListDomain> items = uploadService.boardList();
@@ -358,6 +360,52 @@ public class UserController {
 
 		return mav;
 	};
+	
+	// 수정업데이트
+	@RequestMapping("/update")
+	public ModelAndView mbModify(LoginVO loginVO, HttpServletRequest request, RedirectAttributes re)
+			throws IOException {
+
+		ModelAndView mav = new ModelAndView();
+
+		// page 초기화
+		HttpSession session = request.getSession();
+
+		String page = "1"; // 업데이트 되면 가장 첫화면으로 갈 것이다.
+
+		// db 업데이트
+		LoginDomain loginDomain = null; // 초기화
+		String IP = CommonUtils.getClientIP(request);
+		loginDomain = LoginDomain.builder().mbSeq(Integer.parseInt(loginVO.getSeq())).mbId(loginVO.getId())
+				.mbPw(loginVO.getPw()).mbLevel(loginVO.getLevel()).mbIp(IP).mbUse("Y").build();
+		userService.mbUpdate(loginDomain);
+
+		// 첫 페이지로 이동
+		re.addAttribute("page", page); // 리다이렉트시 파람으로 실어서 보냄
+		mav.setViewName("redirect:/mbList");
+		return mav;
+	};
+
+	
+	// 삭제
+		@GetMapping("/remove/{mbSeq}")
+		public ModelAndView mbRemove(@PathVariable("mbSeq") String mbSeq, RedirectAttributes re, HttpServletRequest request)
+				throws IOException {
+			ModelAndView mav = new ModelAndView();
+
+			// db 삭제
+			Map map = new HashMap<String, String>();
+			map.put("mbSeq", mbSeq);
+			userService.mbDelete(map);
+			// page 초기화
+			HttpSession session = request.getSession();
+
+			// 보고 있던 현재 페이지로 이동
+			re.addAttribute("page", session.getAttribute("page")); // 리다이렉트시 파람으로 실어서 보냄
+			mav.setViewName("redirect:/mbList");
+			return mav;
+		};
+
 
 	// 회원가입 화면
 	@GetMapping("signin")

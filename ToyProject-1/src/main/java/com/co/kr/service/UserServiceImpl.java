@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserSerivce {
 	}
 
 	@Override
-	public void mbRemove(Map<String, String> map) {
+	public void mbDelete(Map<String, String> map) {
 		// TODO Auto-generated method stub
 		userMapper.mbDelete(map);
 	}

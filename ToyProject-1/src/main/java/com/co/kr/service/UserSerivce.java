@@ -32,6 +32,6 @@ public interface UserSerivce {
 	public void mbUpdate(LoginDomain loginDomain);
 
 	// delete
-	public void mbRemove(Map<String, String> map);
+	public void mbDelete(Map<String, String> map);
 
 }

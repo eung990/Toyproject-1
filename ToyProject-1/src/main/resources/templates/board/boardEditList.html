@@ -1,28 +1,169 @@
-<!DOCTYPE html>
-<!-- 수정화면 -->
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
-    layout:decorate="~{layouts/layout}">
-
-<th:block layout:fragment="css"></th:block>
-<th:block layout:fragment="script">
-    <script type="text/javascript">
-       history.pushState(null, null, location.href);
-       window.onpopstate = function(){
-           history.go(1);
-       }
-    </script>
-</th:block>
-
+<!DOCTYPE HTML>
+<html>
 <head>
-    <title>보드정보</title>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="assets/css/main.css" />
 </head>
+<body class="is-preload">
+	<div id="page-wrapper">
 
-<div th:if=${session.id} layout:fragment="content">
-    <div class="container">
-        <th:block th:include="board/clauseEdit.html"></th:block>
-        <th:block th:include="board/list.html"></th:block>
-    </div>
-</div>
+		<!-- Header -->
+		<header id="header">
+			<h1>
+				<a href="http://localhost:8083">메인화면</a>
+			</h1>
+			<nav id="nav">
+				<ul>
+					<th:block th:if="${session.mbLevel}==3">
+						<li><a th:href="@{mbList(page=1)}">사용자정보</a></li>
+					</th:block>
+					<li><a th:href="@{bdList}">완근마켓</a></li>
+					<li><a th:href="@{chat}">내 채팅 </a></li>
+				</ul>
+			</nav>
+		</header>
 
+		<!-- Main -->
+		<section id="main" class="container">
+			<header>
+				<h2>완근마켓</h2>
+				<p class="title" style="color: #ff7f00">내 물건을 팔아보자</p>
+			</header>
+			<section class="box">
+				<div class="userInfo" th:if=${session.id}>
+					<span style="color: #0099a4" th:text="${session.id}"></span><span>
+						님 / </span> <span style="color: #0099a4" th:text="${session.mbLevel}"></span><span>
+						레벨</span>
+					<button type="button" class="button special small">
+						<a th:href="@{logout}" style="color: #fff">로그아웃</a>
+					</button>
+				</div>
+
+				<form role="form" th:object=${fileListVO} th:action="@{editSave}"
+					method="post" enctype="multipart/form-data">
+					<div class="section form">
+						<table>
+							<colgroup>
+								<col style="width: 10%" />
+								<col style="width: 90%" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<th>제목</th>
+									<td><input type="hidden" th:field="*{seq}" /> <input
+										type="hidden" th:field="*{isEdit}" /> <input type="text"
+										th:field="*{title}" placeholder="제목" required /></td>
+								</tr>
+
+								<tr>
+									<th>내용</th>
+									<td><textarea colspan="2" id="story"
+											th:field="*{content}" placeholder="내용을 적어주세요." rows="5"
+											cols="200" required></textarea></td>
+								</tr>
+								<tr>
+									<th><label for="file">첨부파일</label></th>
+									<td><input type="file" id="file" name="files" multiple />
+										<span style="color: #00a2be"
+										th:text="'*새로 파일첨부시 기존 파일은 삭제됩니다.(첨부된 파일 : '+ ${fileLen} + '개)'"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<button type="submit" class="button" style="margin-right: 11px">내용수정</button>
+
+					</div>
+
+				</form>
+			</section>
+			<section class="box">
+				<div class="row">
+					<div class="col-12">
+
+						<!-- Text -->
+						<section class="box">
+
+							<div class="section list">
+								<table>
+									<th:block th:if="${items}">
+										<colgroup>
+											<col style="width: 15%" />
+											<col style="width: 40%" />
+											<col style="width: 10%" />
+											<col style="width: 15%" />
+											<col style="width: 15%" />
+										</colgroup>
+										<thead>
+											<tr>
+												<th>글번호</th>
+												<th>제목</th>
+												<th>아이디</th>
+												<th>등록일</th>
+												<th>수정일</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="item : ${items}">
+												<td th:text="${item.bdSeq}"></td>
+												<td><a th:text="${item.bdTitle}"
+													th:href="@{/detail(bdSeq = ${item.bdSeq})}"></a></td>
+												<td th:text="${item.mbId}"></td>
+												<td th:text="${item.bdCreateAt}"></td>
+												<td th:text="${item.bdUpdateAt}"></td>
+											</tr>
+									</th:block>
+
+									</tbody>
+								</table>
+
+								<th:block th:if="${detail}">
+									<h1 style="padding: 30px 0;" th:text="${detail.bdTitle}"></h1>
+
+									<div style="text-align: right;">
+										<span style="color: #00a2be;">글번호 </span> <span
+											th:text="${detail.bdSeq}"></span> <span
+											style="color: #00a2be"> | </span> <span
+											style="color: #00a2be">글쓴이 </span> <span
+											th:text="${detail.mbId}"></span> <span style="color: #00a2be">
+											| </span> <span th:text="${detail.bdCreateAt}"></span> <span
+											style="color: #00a2be"> | </span> <span
+											th:text="${detail.bdUpdateAt}"></span>
+									</div>
+
+									<div>
+										<p style="padding: 30px 0;" th:text="${detail.bdContent}"></p>
+										<ul th:if="${files}" th:each="file : ${files}"
+											style="display: inline-block; margin-bottom: 5px;">
+											<li><img id="imgId" th:src="@{${file.upNewFileName}}"
+												alt="첨부이미지" height="280" /></li>
+										</ul>
+									</div>
+
+									<div style="padding: 30px 0; text-align: right;">
+										<th:block th:if="${detail.mbId == session.id}">
+											<a th:href="@{/edit(bdSeq = ${detail.bdSeq})}"><button
+													class="button special small">수정</button></a>
+											<a th:href="@{/remove(bdSeq = ${detail.bdSeq})}"><button
+													class="button special small">삭제</button></a>
+										</th:block>
+										<a th:href="@{bdList}"><button
+												style="background-color: #00a2be; color: white; margin-left: 20px"
+												class="button alt small">목록으로</button></a>
+									</div>
+
+								</th:block>
+							</div>
+						</section>
+						<!-- Scripts -->
+						<script src="assets/js/jquery.min.js"></script>
+						<script src="assets/js/jquery.dropotron.min.js"></script>
+						<script src="assets/js/jquery.scrollex.min.js"></script>
+						<script src="assets/js/browser.min.js"></script>
+						<script src="assets/js/breakpoints.min.js"></script>
+						<script src="assets/js/util.js"></script>
+						<script src="assets/js/main.js"></script>
+</body>
 </html>
+
