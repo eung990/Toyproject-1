@@ -70,7 +70,7 @@ useGeneratedKeys = "true" keyProperty = "bdSeq" keyColumn = "bd_seq">
 <select id = "bdSelectOne" resultType = "com.co.kr.domain.BoardListDomain" parameterType="map">
  	select bd_seq, mb_id, bd_title, bd_content, bd_create_at,bd_update_at from jsp.board where bd_seq = #{bdSeq}
 </select>
-
+ 
 <!-- file -->
 <select id="bdSelectOneFile" resultType="com.co.kr.domain.BoardFileDomain" parameterType="map">
     SELECT bd_seq, mb_id, up_original_file_name, up_new_file_name, up_file_path, up_file_size

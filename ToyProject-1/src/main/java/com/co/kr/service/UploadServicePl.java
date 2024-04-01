@@ -66,7 +66,8 @@ public class UploadServicePl implements UploadService {
 			System.out.println(" db 인서트");
 
 		}
-
+		//댓글 업로드시 사용하기 위해 세션에 저장해둠
+		session.setAttribute("bdSeq", boardContentDomain.getBdSeq());
 		// file 데이터 db 저장시 쓰일 값 추출
 		int bdSeq = boardContentDomain.getBdSeq();
 		String mbId = boardContentDomain.getMbId();

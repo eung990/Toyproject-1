@@ -25,9 +25,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.co.kr.code.Code;
 import com.co.kr.domain.BoardFileDomain;
 import com.co.kr.domain.BoardListDomain;
+import com.co.kr.domain.RepleDomain;
 import com.co.kr.exception.RequestException;
+import com.co.kr.service.RepleService;
 import com.co.kr.service.UploadService;
 import com.co.kr.vo.FileListVO;
+import com.co.kr.vo.RepleVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +40,9 @@ public class FileListController {
 
 	@Autowired
 	private UploadService uploadService;
+	
+	@Autowired
+	private RepleService repleService;
 
 	@PostMapping("upload")
 	public ModelAndView bdUpload(FileListVO fileListVO, MultipartHttpServletRequest request, HttpServletRequest httpReq)
@@ -81,12 +87,21 @@ public class FileListController {
 		}
 
 	// detail
+	//html폼에서 @{/detail(bdSeq = ${item.bdSeq})} 부분이 detail이라는 경로로
+	//GET 요청을 보내며, 이 때 bdSeq 파라미터에 ${item.bdSeq}의 값을 할당하여 전송
 	@GetMapping("detail")
 	public ModelAndView bdDetail(@ModelAttribute("fileListVO") FileListVO fileListVO,
 			@RequestParam("bdSeq") String bdSeq, HttpServletRequest request) throws IOException {
 		ModelAndView mav = new ModelAndView();
 		// 파일 하나 가져오기
+		HttpSession session = request.getSession();
+		session.setAttribute("bdSeq",bdSeq);
+		
+		List<RepleDomain> reList = repleService.repleList(Integer.parseInt(bdSeq));
+		System.out.println("bdSeq===>" + bdSeq);
+		System.out.println("reList=====>" + reList);
 		mav = bdSelectOneCall(fileListVO, bdSeq, request);
+		mav.addObject("re_item", reList);
 		mav.setViewName("board/boardList.html");
 		return mav;
 	}
@@ -148,6 +163,8 @@ public class FileListController {
 		map.put("bdSeq", Integer.parseInt(bdSeq));
 
 		// 내용삭제
+		repleService.repleDelete(map);
+
 		uploadService.bdContentRemove(map);
 
 		for (BoardFileDomain list : fileList) {
@@ -183,4 +200,21 @@ public class FileListController {
 		mav.addObject("items", items);
 		return mav;
 	}
+	
+	@PostMapping("reple")
+	public ModelAndView repleUpload(@ModelAttribute("fileListVO") FileListVO fileListVO,RepleVO repleVO,HttpServletRequest request ) {
+		ModelAndView mav = new ModelAndView();
+		HttpSession session = request.getSession();
+
+		int bdSeq = repleService.repleProcess(request, repleVO);
+		List<RepleDomain> reList = repleService.repleList(bdSeq);
+		System.out.println("bdSeq===>" + bdSeq);
+		System.out.println("reList=====>" + reList);
+		mav = bdSelectOneCall(fileListVO,  String.valueOf(bdSeq), request);
+		mav.addObject("re_item", reList);
+		mav.setViewName("board/boardList.html");
+		return mav;
+	}
+	
+
 }
