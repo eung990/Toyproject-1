@@ -152,15 +152,19 @@
 									</th:block>
 								</div>
 							</section>
-							<th:block th:if="${re_item}">
-								<h1 style="padding: 30px 0;"></h1>
-								<tr th:each="item : ${re_item}">
-									<td th:text="${item.mbId}"></td>
-									<td th:text="${item.reContent}"></td>
-									<td th:text="${item.reCreateAt}"></td>
-								</tr>
-								<h1 style="padding: 30px 0;"></h1>
-							</th:block>
+							<div th:if="${re_item}" class="container mt-4">
+								<div th:each="item : ${re_item}" class="card mb-3">
+									<div class="card-header">
+										<strong th:text="${item.mbId}"></strong> <span
+											class="text-muted" style="float: right;"
+											th:text="${item.reCreateAt}"></span>
+									</div>
+									<div class="card-body">
+										<p class="card-text" th:text="${item.reContent}"></p>
+									</div>
+								</div>
+							</div>
+
 							<th:block th:if="${detail}">
 
 								<form role="form" action="reple" method="post"
@@ -186,15 +190,15 @@
 											style="margin-right: 11px">댓글 쓰기</button>
 									</div>
 								</form>
-								</th:block>
-								<!-- Scripts -->
-								<script src="assets/js/jquery.min.js"></script>
-								<script src="assets/js/jquery.dropotron.min.js"></script>
-								<script src="assets/js/jquery.scrollex.min.js"></script>
-								<script src="assets/js/browser.min.js"></script>
-								<script src="assets/js/breakpoints.min.js"></script>
-								<script src="assets/js/util.js"></script>
-								<script src="assets/js/main.js"></script>
+							</th:block>
+							<!-- Scripts -->
+							<script src="assets/js/jquery.min.js"></script>
+							<script src="assets/js/jquery.dropotron.min.js"></script>
+							<script src="assets/js/jquery.scrollex.min.js"></script>
+							<script src="assets/js/browser.min.js"></script>
+							<script src="assets/js/breakpoints.min.js"></script>
+							<script src="assets/js/util.js"></script>
+							<script src="assets/js/main.js"></script>
 </body>
 </html>
 
