@@ -108,20 +108,20 @@ body {
 	padding: 10px;
 }
 </style>
-	<!-- Header -->
-		<header id="header">
-			<h1>
-				<a href="http://localhost:8083">메인화면</a> 
-			</h1>
-			<nav id="nav">
-				<ul>
-					<th:block th:if="${session.mbLevel}==3">
-						<li><a th:href="@{mbList(page=1)}">사용자정보</a></li>
-					</th:block>
-					<li><a th:href="@{bdList}">완근마켓</a></li>				
-				</ul>
-			</nav>
-		</header>
+<!-- Header -->
+<header id="header">
+	<h1>
+		<a href="http://localhost:8083">메인화면</a>
+	</h1>
+	<nav id="nav">
+		<ul>
+			<th:block th:if="${session.mbLevel}==3">
+				<li><a th:href="@{mbList(page=1)}">사용자정보</a></li>
+			</th:block>
+			<li><a th:href="@{bdList}">완근마켓</a></li>
+		</ul>
+	</nav>
+</header>
 </head>
 <body>
 
@@ -204,12 +204,12 @@ $(document).ready(function(){
 })
 </script>
 	<!-- Scripts -->
-						<script src="assets/js/jquery.min.js"></script>
-						<script src="assets/js/jquery.dropotron.min.js"></script>
-						<script src="assets/js/jquery.scrollex.min.js"></script>
-						<script src="assets/js/browser.min.js"></script>
-						<script src="assets/js/breakpoints.min.js"></script>
-						<script src="assets/js/util.js"></script>
-						<script src="assets/js/main.js"></script>
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.dropotron.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
 </body>
 </html>
