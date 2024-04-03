@@ -25,12 +25,11 @@
 			</h1>
 			<nav id="nav">
 				<ul>
-					<li><a href="test1">Home</a></li>
 					<th:block th:if="${session.mbLevel}==3">
 						<li><a th:href="@{mbList(page=1)}">사용자정보</a></li>
 					</th:block>
-					<li><a th:href="@{bdList}">자유게시판</a></li>
-					<li><a th:href="@{ImageList}">MBTI 게시판</a></li>
+					<li><a th:href="@{bdList}">소통게시판</a></li>
+					<li><a th:href="@{chat}">실시간 채팅방</a></li>
 
 				</ul>
 			</nav>

@@ -24,6 +24,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
         // 해당 TextMessage는 서버가 클라이언트로 보내는 메시지가 된다.
         for(WebSocketSession sess: list) {
             sess.sendMessage(message);
+            
         }
     }
     

@@ -32,8 +32,8 @@ public interface UserMapper {
 	public int KakaoMbDuplicationCheck(Map<String, String> map);
 
 	// 업데이트
-	public LoginDomain mbUpdate(LoginDomain loginDomain);
+	public void mbUpdate(LoginDomain loginDomain);
 
 	// 삭제
-	public LoginDomain mbDelete(Map<String, String> map);
+	public void mbDelete(Map<String, String> map);
 }

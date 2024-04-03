@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -362,7 +363,7 @@ public class UserController {
 	};
 	
 	// 수정업데이트
-	@RequestMapping("/update")
+	@RequestMapping("update")
 	public ModelAndView mbModify(LoginVO loginVO, HttpServletRequest request, RedirectAttributes re)
 			throws IOException {
 
@@ -405,7 +406,28 @@ public class UserController {
 			mav.setViewName("redirect:/mbList");
 			return mav;
 		};
+		@GetMapping("/modify/{mbSeq}")
+		public ModelAndView mbModify(@PathVariable("mbSeq") String mbSeq, RedirectAttributes re) throws IOException {
+			ModelAndView mav = new ModelAndView();
+			re.addAttribute("mbSeq", mbSeq);
+			mav.setViewName("redirect:/mbEditList");
+			return mav;
+		};
+		
+		// 대시보드 리스트 보여주기
+		@GetMapping("mbEditList")
+		public ModelAndView mbListEdit(@RequestParam("mbSeq") String mbSeq, HttpServletRequest request) {
 
+			ModelAndView mav = new ModelAndView();
+			// 해당리스트 가져옴
+			mav = mbListCall(request);
+			Map map = new HashMap<String, String>();
+			map.put("mbSeq", mbSeq);
+			LoginDomain loginDomain = userService.mbSelectList(map);
+			mav.addObject("item", loginDomain);
+			mav.setViewName("admin/adminEditList.html");
+			return mav;
+		};
 
 	// 회원가입 화면
 	@GetMapping("signin")

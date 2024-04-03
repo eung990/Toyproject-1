@@ -19,7 +19,7 @@
 					<th:block th:if="${session.mbLevel}==3">
 						<li><a th:href="@{mbList(page=1)}">사용자정보</a></li>
 					</th:block>
-					<li><a th:href="@{bdList}">완근마켓</a></li>
+					<li><a th:href="@{bdList}">소통 게시판</a></li>
 					<li><a th:href="@{chat}">내 채팅 </a></li>
 				</ul>
 			</nav>
@@ -28,8 +28,8 @@
 		<!-- Main -->
 		<section id="main" class="container">
 			<header>
-				<h2>완근마켓</h2>
-				<p class="title" style="color: #ff7f00">내 물건을 팔아보자</p>
+				<h2>소통 게시판</h2>
+				<p class="title" style="color: #ff7f00">대화가 필요해</p>
 			</header>
 			<section class="box">
 				<div class="userInfo" th:if=${session.id}>
